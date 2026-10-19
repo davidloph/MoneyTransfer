@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 import java.util.UUID;
@@ -29,6 +30,7 @@ public class CuentaTest {
     @NullAndEmptySource
     @ValueSource(strings = {"", "       "})
     void rechazaNuevaCuentaSiNoTieneTitular(String titular) {
-        assertThrows(IllegalArgumentException.class, () -> new Cuenta("", Money.eur(10_000)));
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Cuenta("", Money.eur(10_000)));
+        assertTrue(ex.getMessage().contains("titular"));
     }
 }
