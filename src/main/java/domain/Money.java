@@ -17,4 +17,8 @@ public record Money(long cantidad, Currency moneda) {
     public static Money eur(long cantidad) {
         return new Money(cantidad, EUR);
     }
+
+    public Money restar(Money saldoATransferir) {
+        return new Money(cantidad - saldoATransferir.cantidad(), EUR);
+    }
 }
