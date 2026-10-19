@@ -33,4 +33,15 @@ public class CuentaTest {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Cuenta("", Money.eur(10_000)));
         assertTrue(ex.getMessage().contains("titular"));
     }
+
+    @Test
+    void rechazaSaldoInicialNegativo() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> new Cuenta("David Lopera Henao", Money.eur(-10_000)));
+        assertTrue(ex.getMessage().contains("cantidad"));
+    }
+
+    @Test
+    void rechazaTransferenciaMayorAlSaldo() {
+        NotEnoughBalanceException ex = assertThrows(NotEnoughBalanceException.class, () -> cuenta.transferir(UUID.fromString("fe3fd0d3-7fba-48ee-b9a9-6afc5efd1ff0"), Money.eur(10_001)));
+    }
 }
