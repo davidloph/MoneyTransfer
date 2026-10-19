@@ -12,13 +12,13 @@ public class Cuenta {
     public Cuenta(UUID uuid, String titular, Money saldo) {
         setId(uuid);
         setTitular(titular);
-        setSaldoInicial(saldo);
+        setSaldo(saldo);
     }
 
     public Cuenta(String titular, Money saldo) {
         setId(UUID.randomUUID());
         setTitular(titular);
-        setSaldoInicial(saldo);
+        setSaldo(saldo);
     }
 
     public UUID getUuid() {
@@ -44,7 +44,18 @@ public class Cuenta {
         return  saldo.get();
     }
 
-    private void setSaldoInicial(Money saldoInicial) {
-        this.saldo = new AtomicReference<>(saldoInicial);
+    private void setSaldo(Money saldo) {
+        this.saldo = new AtomicReference<>(saldo);
+    }
+
+    public void transferir(UUID uuid, Money saldoATranferir) {
+        try {
+            setSaldo(saldo.get().restar(saldoATranferir));
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("cantidad")) {
+
+                throw new NotEnoughBalanceException("No tiene sueldo suficiente para la transferencia.");
+            }
+        }
     }
 }
