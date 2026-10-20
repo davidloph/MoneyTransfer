@@ -18,7 +18,20 @@ public record Money(long cantidad, Currency moneda) {
         return new Money(cantidad, EUR);
     }
 
-    public Money restar(Money saldoATransferir) {
-        return new Money(cantidad - saldoATransferir.cantidad(), EUR);
+    public Money restar(Money saldo) {
+        if (!isMonedaIgual(saldo)) throw new DifferentCurrencyException("La moneda no puede ser diferente");
+        if (saldo.cantidad() > cantidad) {
+            throw new NotEnoughBalanceException("No tiene sueldo suficiente para la transferencia.");
+        }
+        return new Money(cantidad - saldo.cantidad(), EUR);
+    }
+
+    public Money sumar(Money saldo) {
+        if (!isMonedaIgual(saldo)) throw new DifferentCurrencyException("La moneda no puede ser diferente");
+        return new Money(cantidad + saldo.cantidad(), EUR);
+    }
+
+    private boolean isMonedaIgual(Money otro) {
+        return moneda.equals(otro.moneda);
     }
 }

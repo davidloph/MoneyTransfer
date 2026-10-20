@@ -21,7 +21,13 @@ public class Cuenta {
         setSaldo(saldo);
     }
 
-    public UUID getUuid() {
+    public Cuenta() {
+        setId(UUID.fromString("00000000-0000-0000-0000-000000000000"));
+        setTitular("Notfound");
+        setSaldo(Money.eur(0));
+    }
+
+    public UUID getId() {
         return id;
     }
 
@@ -48,14 +54,11 @@ public class Cuenta {
         this.saldo = new AtomicReference<>(saldo);
     }
 
-    public void transferir(UUID uuid, Money saldoATranferir) {
-        try {
-            setSaldo(saldo.get().restar(saldoATranferir));
-        } catch (IllegalArgumentException e) {
-            if (e.getMessage().contains("cantidad")) {
+    public void retirar(Money saldoARetirar) {
+            this.saldo.updateAndGet(saldoActual -> saldoActual.restar(saldoARetirar));
+    }
 
-                throw new NotEnoughBalanceException("No tiene sueldo suficiente para la transferencia.");
-            }
-        }
+    public void depositar(Money saldoADepositar) {
+        this.saldo.updateAndGet(saldoActual -> saldoActual.sumar(saldoADepositar));
     }
 }
